@@ -1,0 +1,52 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+    #service_name:
+    #    class: AppBundle\Directory\ClassName
+    #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
+
+    # Not Working, but standalone WinADController is working so it should work
+    ldap:
+        class: Symfony\Component\Ldap\Ldap
+        arguments: ['@ext_ldap_adapter']
+    ext_ldap_adapter:
+        class: Symfony\Component\Ldap\Adapter\ExtLdap\Adapter
+        arguments:
+            -   host: "internal.imsglobal.com"
+    #AppBundle\Service\FileUploader:
+    #    class: AppBundle\Service\FileUploader
+    #    arguments:
+    #        $targetDir: 'C:\ProgramData\MySQL\MySQL Server 5.7\Data\pharmareport_config'
+    GsrmImportMapping:
+        class: AppBundle\Services\GsrmImportMapping
+    GsrmExportMapping:
+        class: AppBundle\Services\GsrmExportMapping
+    GsrmDataQualityChecks:
+        class: AppBundle\Services\GsrmDataQualityChecks
+        arguments:
+          - '@templating'
+    TarImportTargets:
+        class: AppBundle\Services\TarImportTargets
+    TarExportTargets:
+        class: AppBundle\Services\TarExportTargets
+    ImportFile:
+        class: AppBundle\Services\ImportFile
+    app.multidimensional_arrays_diff:
+      class: AppBundle\Services\MultidimensionalArraysDiff
+    app.unexpected_data:
+        class: AppBundle\DataQualityChecks\UnexpectedData
+    app.new_data:
+        class: AppBundle\DataQualityChecks\NewData
+    app.changed_data:
+        class: AppBundle\DataQualityChecks\ChangedData
+    app.unchanged_data:
+        class: AppBundle\DataQualityChecks\UnchangedData
+    app.removed_data:
+        class: AppBundle\DataQualityChecks\RemovedData
+    app.duplicate_data:
+        class: AppBundle\DataQualityChecks\DuplicateData
+    app.format_value:
+        class: AppBundle\Services\FormatValue

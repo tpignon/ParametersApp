@@ -1,0 +1,108 @@
+{% extends 'layout_gsrm.html.twig' %}
+
+{% block title %}
+  Import data - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <h3><strong>Data Quality Checks :</strong></h3>
+    <div class="jumbotron">
+        {% if overviewStatus.total_nbr_of_warnings > 1 %}
+            <h4>Overall status:</h4>
+            <ul>
+                <li><strong>{{ overviewStatus.total_nbr_of_warnings }} warnings</strong></li>
+                <li>{{ overviewStatus.total_nbr_of_removed_mappings }} mapping(s) will be removed</li>
+                <li>{{ overviewStatus.total_nbr_of_changed_mappings }} mapping(s) will be changed</li>
+                <li>{{ overviewStatus.total_nbr_of_new_mappings }} new mapping(s)</li>
+                <li>{{ overviewStatus.total_nbr_of_unchanged_mappings }} unchanged mapping(s)</li>
+            </ul>
+            <br />
+            {% for item in statusByClientoutputId %}
+                {% if item.nbr_of_warnings > 1 %}
+                    <h4>ClientoutputId <strong>{{ item.clientoutputId }}</strong> - {{ item.nbr_of_import_mappings }} mappings, <strong>{{ item.nbr_of_warnings }} warnings :</strong></h4>
+                {% elseif item.nbr_of_warnings == 1 %}
+                    <h4>ClientoutputId <strong>{{ item.clientoutputId }}</strong> - {{ item.nbr_of_import_mappings }} mappings, <strong>{{ item.nbr_of_warnings }} warning :</strong></h4>
+                {% else %}
+                    <h4>ClientoutputId <strong>{{ item.clientoutputId }}</strong> - {{ item.nbr_of_import_mappings }} mappings, <strong>{{ item.nbr_of_warnings }} warning</strong></h4>
+                {% endif %}
+                <ul>
+                {% if item.nbr_of_current_mappings == 0 %}
+                    <li>There was no Geo-SalesRep mapping before, this is the first one.</li>
+                {% endif %}
+                {% for element in dataQualityChecks %}
+                    {% if element.clientOutputId == item.clientoutputId and element.status == 'WARNING' %}
+                        <li>{{ element.info }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul><br />
+            {% endfor %}
+        {% else %}
+            <h4>Overall status:</h4>
+            <ul>
+                <li><strong>{{ overviewStatus.total_nbr_of_warnings }} warning</strong></li>
+                <li>{{ overviewStatus.total_nbr_of_removed_mappings }} mapping(s) will be removed</li>
+                <li>{{ overviewStatus.total_nbr_of_changed_mappings }} mapping(s) will be changed</li>
+                <li>{{ overviewStatus.total_nbr_of_new_mappings }} new mapping(s)</li>
+                <li>{{ overviewStatus.total_nbr_of_unchanged_mappings }} unchanged mapping(s)</li>
+            </ul>
+            <br />
+            {% for item in statusByClientoutputId %}
+                {% if item.nbr_of_warnings == 1 %}
+                    <h4>ClientoutputId <strong>{{ item.clientoutputId }}</strong> - {{ item.nbr_of_import_mappings }} mappings, <strong>{{ item.nbr_of_warnings }} warning</strong> :</h4>
+                {% else %}
+                    <h4>ClientoutputId <strong>{{ item.clientoutputId }}</strong> - {{ item.nbr_of_import_mappings }} mappings, <strong>{{ item.nbr_of_warnings }} warning</strong></h4>
+                {% endif %}
+                <ul>
+                {% if item.nbr_of_current_mappings == 0 %}
+                    <li>There was no Geo-SalesRep mapping before, this is the first one.</li>
+                {% endif %}
+                {% for element in dataQualityChecks %}
+                    {% if element.clientOutputId == item.clientoutputId and element.status == 'WARNING' %}
+                        <li>{{ element.info }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul><br />
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div>
+        <center>
+            {{ form_start(confirmForm) }}
+                {{ form_widget(confirmForm.cancel, {'attr': {'class': 'btn btn-warning'}}) }}
+                {{ form_widget(confirmForm.confirm, {'attr': {'class': 'btn btn-danger'}}) }}
+            {{ form_end(confirmForm) }}
+        </center>
+        <br />
+    </div>
+
+    <div class="table-responsive">
+      <h3><strong>Preview import data :</strong></h3>
+        <table class="table table-bordered">
+          <tr>
+            <th>ClientoutputId</th>
+            <th>Version geo structure code</th>
+            <th>MarketId<br />= Team</th>
+            <th>Level<br />= Geo level</th>
+            <th>NameLevel<br />= Geo</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>E-mail</th>
+          </tr>
+          {% for element in importMapping %}
+            <tr>
+              <td>{{ element.clientOutputId }}</td>
+              <td>{{ element.versionGeoStructureCode }}</td>
+              <td>{{ element.geoTeam }}</td>
+              <td>{{ element.geoLevelNumber }}</td>
+              <td>{{ element.geoValue }}</td>
+              <td>{{ element.srFirstName }}</td>
+              <td>{{ element.srLastName }}</td>
+              <td>{{ element.srEmail }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}
