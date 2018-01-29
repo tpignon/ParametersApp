@@ -1,4 +1,5 @@
 /app/config/parameters.yml
+/app/Resources/views/environment.html.twig
 /build/
 /phpunit.xml
 /var/*
@@ -15,3 +16,4 @@
 /vendor/
 /web/bundles/
 /web/uploads/
+/web/connect.php
